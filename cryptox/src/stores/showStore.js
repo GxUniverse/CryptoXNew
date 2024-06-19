@@ -2,7 +2,9 @@ import { create } from 'zustand';
 import axios from 'axios';
 import debounce from 'lodash/debounce';
 
-const showStore = create((set) => ({
+const CACHE_EXPIRY_TIME = 5 * 60 * 1000;  // 5 minutes
+
+const showStore = create((set, get) => ({
   data: null,
   graphData: [],
   loading: false,
@@ -10,8 +12,13 @@ const showStore = create((set) => ({
   dataCache: {},
 
   fetchData: debounce(async (coinId) => {
-    if (showStore.getState().dataCache[coinId]) {
-      set({ data: showStore.getState().dataCache[coinId] });
+    const { dataCache } = get();
+    const cachedData = dataCache[coinId];
+    const currentTime = new Date().getTime();
+
+    if (cachedData && (currentTime - cachedData.timestamp) < CACHE_EXPIRY_TIME) {
+      set({ data: cachedData.data });
+      get().fetchGraphData(coinId);
       return;
     }
 
@@ -32,9 +39,9 @@ const showStore = create((set) => ({
         },
       };
       set({ data });
-      showStore.getState().fetchGraphData(coinId);
+      get().fetchGraphData(coinId);
       set(state => ({
-        dataCache: { ...state.dataCache, [coinId]: data }
+        dataCache: { ...state.dataCache, [coinId]: { data, timestamp: currentTime } }
       }));
     } catch (error) {
       console.error('Error fetching coin data:', error);
