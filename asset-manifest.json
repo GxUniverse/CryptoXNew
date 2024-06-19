@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/CryptoXNew.git/static/css/main.18c8e4d7.css",
+    "main.js": "/CryptoXNew.git/static/js/main.5ae1e735.js",
+    "index.html": "/CryptoXNew.git/index.html",
+    "main.18c8e4d7.css.map": "/CryptoXNew.git/static/css/main.18c8e4d7.css.map",
+    "main.5ae1e735.js.map": "/CryptoXNew.git/static/js/main.5ae1e735.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.18c8e4d7.css",
+    "static/js/main.5ae1e735.js"
+  ]
+}
